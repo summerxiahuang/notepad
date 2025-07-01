@@ -2,63 +2,66 @@
 {% block title %}Login{% endblock %} 
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-4">
-    <div class="card">
-      <div class="card-body p-5">
-        <div class="text-center mb-4">
-          <i class="bi bi-person-circle display-1 text-primary"></i>
-          <h3 class="mt-3">Welcome Back</h3>
-          <p class="text-muted">Sign in to your account</p>
+<div class="flex justify-center items-center min-h-[60vh]">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class="text-center mb-8">
+        <i class="bi bi-person-circle text-6xl text-primary mb-4"></i>
+        <h3 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h3>
+        <p class="text-lg text-gray-600">Sign in to your Smart Notes account</p>
+      </div>
+      
+      <form method="POST" id="loginForm" class="space-y-6">
+        <div>
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="bi bi-envelope mr-2"></i>Email Address
+          </label>
+          <input
+            type="email"
+            class="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
         </div>
         
-        <form method="POST" id="loginForm">
-          <div class="mb-3">
-            <label for="email" class="form-label">
-              <i class="bi bi-envelope me-2"></i>Email Address
-            </label>
+        <div>
+          <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="bi bi-lock mr-2"></i>Password
+          </label>
+          <div class="relative">
             <input
-              type="email"
-              class="form-control form-control-lg"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
+              type="password"
+              class="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 pr-12"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
               required
             />
-          </div>
-          
-          <div class="mb-4">
-            <label for="password" class="form-label">
-              <i class="bi bi-lock me-2"></i>Password
-            </label>
-            <div class="input-group">
-              <input
-                type="password"
-                class="form-control form-control-lg"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                required
-              />
-              <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                <i class="bi bi-eye"></i>
-              </button>
-            </div>
-          </div>
-          
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary btn-lg">
-              <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            <button 
+              type="button" 
+              id="togglePassword"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <i class="bi bi-eye text-xl"></i>
             </button>
           </div>
-        </form>
-        
-        <div class="text-center mt-4">
-          <p class="mb-0">
-            Don't have an account? 
-            <a href="/sign-up" class="text-decoration-none fw-bold">Sign up here</a>
-          </p>
         </div>
+        
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold py-4 px-6 rounded-xl text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+        >
+          <i class="bi bi-box-arrow-in-right mr-2"></i>Sign In
+        </button>
+      </form>
+      
+      <div class="text-center mt-6">
+        <p class="text-gray-600">
+          Don't have an account? 
+          <a href="/sign-up" class="text-primary font-semibold hover:text-secondary transition-colors">Sign up here</a>
+        </p>
       </div>
     </div>
   </div>
@@ -85,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', function(e) {
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Signing in...';
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Signing in...';
             submitBtn.disabled = true;
             
             setTimeout(() => {

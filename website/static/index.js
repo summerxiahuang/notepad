@@ -42,10 +42,10 @@ function clearAllNotes() {
         }).then((response) => {
             if (response.ok) {
                 document.getElementById('notes').innerHTML = `
-                    <div class="text-center py-5">
-                        <i class="bi bi-journal-x display-1 text-muted"></i>
-                        <h5 class="mt-3 text-muted">No notes yet</h5>
-                        <p class="text-muted">Create your first note to get started!</p>
+                    <div class="text-center py-12">
+                        <i class="bi bi-journal-x text-6xl text-gray-300 mb-4"></i>
+                        <h5 class="text-xl font-semibold text-gray-600 mb-2">No notes yet</h5>
+                        <p class="text-gray-500">Create your first note to get started!</p>
                     </div>
                 `;
                 updateStats();
@@ -115,16 +115,19 @@ function updateStats() {
 
 // Show notification
 function showNotification(message, type = 'info') {
-    const alertClass = type === 'success' ? 'alert-success' : 
-                      type === 'error' ? 'alert-danger' : 'alert-info';
+    const bgColor = type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 
+                    type === 'error' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-blue-50 border-blue-200 text-blue-700';
     
     const notification = document.createElement('div');
-    notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
-    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.className = `${bgColor} border px-4 py-3 rounded-lg flex items-center justify-between fixed top-5 right-5 z-50 min-w-[300px] shadow-lg`;
     notification.innerHTML = `
-        <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="flex items-center">
+            <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} mr-2"></i>
+            ${message}
+        </div>
+        <button type="button" class="text-gray-400 hover:text-gray-600" onclick="this.parentElement.remove()">
+            <i class="bi bi-x text-lg"></i>
+        </button>
     `;
     
     document.body.appendChild(notification);
@@ -155,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add loading state
             const submitBtn = noteForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding...';
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Adding...';
             submitBtn.disabled = true;
             
             // Reset button after form submission
@@ -184,8 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ctrl/Cmd + K to search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
-            searchModal.show();
+            openSearchModal();
         }
     });
     
@@ -200,18 +202,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (query.length > 0) {
                 resultsContainer.innerHTML = results.map(note => {
                     const noteText = note.querySelector('p').textContent;
-                    const noteDate = note.querySelector('.note-date').textContent;
+                    const noteDate = note.querySelector('.text-sm').textContent;
                     return `
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <p class="mb-1">${noteText}</p>
-                                <small class="text-muted">${noteDate}</small>
-                            </div>
+                        <div class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors">
+                            <p class="text-gray-800 mb-2">${noteText}</p>
+                            <small class="text-gray-500">${noteDate}</small>
                         </div>
                     `;
                 }).join('');
             } else {
-                resultsContainer.innerHTML = '<p class="text-muted">Start typing to search notes...</p>';
+                resultsContainer.innerHTML = '<p class="text-gray-500">Start typing to search notes...</p>';
             }
         });
     }
@@ -230,4 +230,39 @@ document.addEventListener('DOMContentLoaded', function() {
             note.style.transform = 'translateY(0)';
         }, index * 100);
     });
+});
+
+// Search modal functions
+function openSearchModal() {
+    const modal = document.getElementById('searchModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('searchInput').focus();
+    }
+}
+
+function closeSearchModal() {
+    const modal = document.getElementById('searchModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchResults').innerHTML = '';
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('searchModal');
+    if (modal && e.target === modal) {
+        closeSearchModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeSearchModal();
+    }
 });
