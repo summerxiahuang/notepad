@@ -1,48 +1,220 @@
 {% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
     content %}
-    <form method="POST">
-      <h3 align="center">Sign Up</h3>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-        />
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card">
+          <div class="card-body p-5">
+            <div class="text-center mb-4">
+              <i class="bi bi-person-plus display-1 text-primary"></i>
+              <h3 class="mt-3">Create Account</h3>
+              <p class="text-muted">Join Smart Notes today</p>
+            </div>
+            
+            <form method="POST" id="signupForm">
+              <div class="mb-3">
+                <label for="firstName" class="form-label">
+                  <i class="bi bi-person me-2"></i>First Name
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="Enter your first name"
+                  required
+                />
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  <i class="bi bi-envelope me-2"></i>Email Address
+                </label>
+                <input
+                  type="email"
+                  class="form-control form-control-lg"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              
+              <div class="mb-3">
+                <label for="password1" class="form-label">
+                  <i class="bi bi-lock me-2"></i>Password
+                </label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control form-control-lg"
+                    id="password1"
+                    name="password1"
+                    placeholder="Create a password"
+                    required
+                  />
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="password-strength mt-2" id="passwordStrength">
+                  <div class="progress" style="height: 4px;">
+                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                  </div>
+                  <small class="text-muted" id="strengthText">Password strength</small>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="password2" class="form-label">
+                  <i class="bi bi-lock-fill me-2"></i>Confirm Password
+                </label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control form-control-lg"
+                    id="password2"
+                    name="password2"
+                    placeholder="Confirm your password"
+                    required
+                  />
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="password-match mt-2" id="passwordMatch">
+                  <small class="text-muted">Passwords must match</small>
+                </div>
+              </div>
+              
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-person-plus me-2"></i>Create Account
+                </button>
+              </div>
+            </form>
+            
+            <div class="text-center mt-4">
+              <p class="mb-0">
+                Already have an account? 
+                <a href="/login" class="text-decoration-none fw-bold">Sign in here</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="firstName"
-          name="firstName"
-          placeholder="Enter first name"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password1">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password1"
-          name="password1"
-          placeholder="Enter password"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password2">Password (Confirm)</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password2"
-          name="password2"
-          placeholder="Confirm password"
-        />
-      </div>
-      <br />
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password toggle functionality
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        
+        if (togglePassword1 && password1) {
+            togglePassword1.addEventListener('click', function() {
+                const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+                password1.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye');
+                this.querySelector('i').classList.toggle('bi-eye-slash');
+            });
+        }
+        
+        if (togglePassword2 && password2) {
+            togglePassword2.addEventListener('click', function() {
+                const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+                password2.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye');
+                this.querySelector('i').classList.toggle('bi-eye-slash');
+            });
+        }
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let feedback = [];
+            
+            if (password.length >= 8) strength += 25;
+            else feedback.push('At least 8 characters');
+            
+            if (/[a-z]/.test(password)) strength += 25;
+            else feedback.push('Lowercase letter');
+            
+            if (/[A-Z]/.test(password)) strength += 25;
+            else feedback.push('Uppercase letter');
+            
+            if (/[0-9]/.test(password)) strength += 25;
+            else feedback.push('Number');
+            
+            return { strength, feedback };
+        }
+        
+        // Password strength indicator
+        if (password1) {
+            password1.addEventListener('input', function() {
+                const result = checkPasswordStrength(this.value);
+                const progressBar = document.querySelector('#passwordStrength .progress-bar');
+                const strengthText = document.getElementById('strengthText');
+                
+                progressBar.style.width = result.strength + '%';
+                
+                if (result.strength <= 25) {
+                    progressBar.className = 'progress-bar bg-danger';
+                    strengthText.textContent = 'Weak';
+                } else if (result.strength <= 50) {
+                    progressBar.className = 'progress-bar bg-warning';
+                    strengthText.textContent = 'Fair';
+                } else if (result.strength <= 75) {
+                    progressBar.className = 'progress-bar bg-info';
+                    strengthText.textContent = 'Good';
+                } else {
+                    progressBar.className = 'progress-bar bg-success';
+                    strengthText.textContent = 'Strong';
+                }
+                
+                checkPasswordMatch();
+            });
+        }
+        
+        // Password match checker
+        function checkPasswordMatch() {
+            const matchDiv = document.getElementById('passwordMatch');
+            const small = matchDiv.querySelector('small');
+            
+            if (password1.value && password2.value) {
+                if (password1.value === password2.value) {
+                    small.className = 'text-success';
+                    small.textContent = '✓ Passwords match';
+                } else {
+                    small.className = 'text-danger';
+                    small.textContent = '✗ Passwords do not match';
+                }
+            } else {
+                small.className = 'text-muted';
+                small.textContent = 'Passwords must match';
+            }
+        }
+        
+        if (password2) {
+            password2.addEventListener('input', checkPasswordMatch);
+        }
+        
+        // Form enhancement
+        const signupForm = document.getElementById('signupForm');
+        if (signupForm) {
+            signupForm.addEventListener('submit', function(e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Creating account...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            });
+        }
+    });
+    </script>
     {% endblock %}

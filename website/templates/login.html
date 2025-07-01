@@ -1,28 +1,99 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
-    %}
-    <form method="POST">
-      <h3 align="center">Login</h3>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-        />
+{% extends "base.html" %} 
+{% block title %}Login{% endblock %} 
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-4">
+    <div class="card">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <i class="bi bi-person-circle display-1 text-primary"></i>
+          <h3 class="mt-3">Welcome Back</h3>
+          <p class="text-muted">Sign in to your account</p>
+        </div>
+        
+        <form method="POST" id="loginForm">
+          <div class="mb-3">
+            <label for="email" class="form-label">
+              <i class="bi bi-envelope me-2"></i>Email Address
+            </label>
+            <input
+              type="email"
+              class="form-control form-control-lg"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          
+          <div class="mb-4">
+            <label for="password" class="form-label">
+              <i class="bi bi-lock me-2"></i>Password
+            </label>
+            <div class="input-group">
+              <input
+                type="password"
+                class="form-control form-control-lg"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+              <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+          </div>
+        </form>
+        
+        <div class="text-center mt-4">
+          <p class="mb-0">
+            Don't have an account? 
+            <a href="/sign-up" class="text-decoration-none fw-bold">Sign up here</a>
+          </p>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          placeholder="Enter password"
-        />
-      </div>
-      <br />
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    {% endblock %}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    if (togglePassword && password) {
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+    }
+    
+    // Form enhancement
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Signing in...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+    }
+});
+</script>
+{% endblock %}
